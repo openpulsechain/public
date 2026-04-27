@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Extension Icons</title>
+</head>
+<body>
+  <p>Open this file in a browser, right-click each canvas, and "Save Image As" to get the PNG icons.</p>
+  <div>
+    <h3>16x16</h3>
+    <canvas id="c16" width="16" height="16"></canvas>
+  </div>
+  <div>
+    <h3>48x48</h3>
+    <canvas id="c48" width="48" height="48"></canvas>
+  </div>
+  <div>
+    <h3>128x128</h3>
+    <canvas id="c128" width="128" height="128"></canvas>
+  </div>
+  <script>
+    function drawIcon(canvas) {
+      const ctx = canvas.getContext('2d');
+      const s = canvas.width;
+      const r = s * 0.15; // corner radius
+
+      // Background gradient
+      const grad = ctx.createLinearGradient(0, 0, s, s);
+      grad.addColorStop(0, '#00D4FF');
+      grad.addColorStop(1, '#8000E0');
+
+      // Rounded rect
+      ctx.beginPath();
+      ctx.moveTo(r, 0);
+      ctx.lineTo(s - r, 0);
+      ctx.quadraticCurveTo(s, 0, s, r);
+      ctx.lineTo(s, s - r);
+      ctx.quadraticCurveTo(s, s, s - r, s);
+      ctx.lineTo(r, s);
+      ctx.quadraticCurveTo(0, s, 0, s - r);
+      ctx.lineTo(0, r);
+      ctx.quadraticCurveTo(0, 0, r, 0);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Shield icon (simplified)
+      ctx.save();
+      ctx.translate(s * 0.5, s * 0.48);
+      const scale = s * 0.013;
+      ctx.scale(scale, scale);
+      ctx.beginPath();
+      // Shield path
+      ctx.moveTo(0, -18);
+      ctx.lineTo(14, -12);
+      ctx.lineTo(14, 2);
+      ctx.quadraticCurveTo(14, 14, 0, 20);
+      ctx.quadraticCurveTo(-14, 14, -14, 2);
+      ctx.lineTo(-14, -12);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      ctx.fill();
+
+      // Checkmark inside shield
+      ctx.beginPath();
+      ctx.moveTo(-5, 2);
+      ctx.lineTo(-1, 7);
+      ctx.lineTo(7, -4);
+      ctx.strokeStyle = '#00D4FF';
+      ctx.lineWidth = 3.5;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    drawIcon(document.getElementById('c16'));
+    drawIcon(document.getElementById('c48'));
+    drawIcon(document.getElementById('c128'));
+  </script>
+</body>
+</html>

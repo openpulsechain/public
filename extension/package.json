@@ -1,0 +1,40 @@
+{
+  "name": "openpulsechain-extension",
+  "private": true,
+  "version": "1.0.9",
+  "type": "module",
+  "description": "OpenPulsechain — Token safety, scam protection & portfolio tracker for PulseChain",
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "prebuild": "node scripts/safety-invariant-check.mjs",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "check:safety-invariant": "node scripts/safety-invariant-check.mjs",
+    "pack": "npm run build && find dist -name .DS_Store -delete && rm -f openpulsechain-extension-v$npm_package_version.zip && (cd dist && zip -rq ../openpulsechain-extension-v$npm_package_version.zip . -x '.DS_Store' -x '**/.DS_Store')"
+  },
+  "dependencies": {
+    "js-sha3": "^0.9.3",
+    "lucide-react": "^0.577.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zustand": "^5.0.0"
+  },
+  "overrides": {
+    "@crxjs/vite-plugin": {
+      "rollup": "$rollup"
+    }
+  },
+  "devDependencies": {
+    "rollup": "^4.59.0",
+    "@crxjs/vite-plugin": "^2.0.0-beta.28",
+    "@types/chrome": "^0.0.300",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.1"
+  }
+}

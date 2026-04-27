@@ -1,0 +1,101 @@
+/* OpenPulsechain — Content script styles for PulseX enrichment */
+
+.op-safety-badge {
+  transition: opacity 0.2s ease;
+}
+
+.op-safety-badge:hover {
+  opacity: 0.8;
+}
+
+/* Transaction warning overlay */
+.op-tx-warning-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.op-tx-warning-card {
+  background: #111827;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 420px;
+  width: 90%;
+  color: #e5e7eb;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.op-tx-warning-card h3 {
+  color: #ef4444;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.op-tx-warning-card .risks {
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.op-tx-warning-card .risk-item {
+  color: #fca5a5;
+  font-size: 13px;
+  padding: 4px 0;
+}
+
+.op-tx-warning-card .score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.op-tx-warning-card .actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.op-tx-warning-card button {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.op-tx-warning-card button:hover {
+  opacity: 0.85;
+}
+
+.op-tx-warning-card .btn-cancel {
+  background: #ef4444;
+  color: white;
+}
+
+.op-tx-warning-card .btn-proceed {
+  background: rgba(255, 255, 255, 0.1);
+  color: #9ca3af;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
