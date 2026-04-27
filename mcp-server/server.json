@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.openpulsechain/analytics",
+  "title": "OpenPulsechain Analytics",
+  "description": "Real-time PulseChain blockchain analytics for AI assistants. 20 tools: token prices, safety scores, honeypot detection, whale tracking, bridge flows, holder leagues, AML checks, wallet analysis.",
+  "repository": {
+    "url": "https://github.com/openpulsechain/openpulsechain",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@openpulsechain/mcp-server",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": []
+    }
+  ]
+}
