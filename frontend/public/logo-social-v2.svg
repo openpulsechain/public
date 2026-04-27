@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="pulse-line" x1="0" y1="0.5" x2="1" y2="0.5">
+      <stop offset="0%" stop-color="#00D4FF"/>
+      <stop offset="50%" stop-color="#4060FF"/>
+      <stop offset="100%" stop-color="#D000C0"/>
+    </linearGradient>
+    <radialGradient id="glow-ring" cx="50%" cy="50%" r="50%">
+      <stop offset="50%" stop-color="#4060FF" stop-opacity="0"/>
+      <stop offset="75%" stop-color="#5070FF" stop-opacity="0.5"/>
+      <stop offset="85%" stop-color="#00D4FF" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0a0a25"/>
+      <stop offset="100%" stop-color="#050510"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Circular background -->
+  <circle cx="200" cy="200" r="200" fill="url(#bg-grad)"/>
+
+  <!-- Glow ring -->
+  <circle cx="200" cy="200" r="160" fill="none" stroke="url(#glow-ring)" stroke-width="60" opacity="0.8"/>
+
+  <!-- Inner subtle glow -->
+  <circle cx="200" cy="200" r="120" fill="#4060FF" opacity="0.06"/>
+
+  <!-- Pulse heartbeat line — asymmetric like the reference -->
+  <polyline
+    points="60,210 120,210 155,290 210,100 260,210 340,210"
+    fill="none"
+    stroke="url(#pulse-line)"
+    stroke-width="18"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

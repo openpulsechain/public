@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500" viewBox="0 0 1500 500">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#050510"/>
+      <stop offset="100%" stop-color="#0a0a20"/>
+    </linearGradient>
+    <linearGradient id="pulse-grad3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00D4FF"/>
+      <stop offset="100%" stop-color="#8000E0"/>
+    </linearGradient>
+    <linearGradient id="text-grad3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00D4FF"/>
+      <stop offset="100%" stop-color="#8000E0"/>
+    </linearGradient>
+    <radialGradient id="neon-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="45%" stop-color="#4060FF" stop-opacity="0"/>
+      <stop offset="70%" stop-color="#5070FF" stop-opacity="0.4"/>
+      <stop offset="82%" stop-color="#00D4FF" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1500" height="500" fill="url(#bg3)"/>
+
+  <!-- Aurora blobs -->
+  <ellipse cx="1300" cy="80" rx="400" ry="300" fill="#00D4FF" opacity="0.08"/>
+  <ellipse cx="200" cy="420" rx="350" ry="250" fill="#FF0040" opacity="0.05"/>
+  <ellipse cx="600" cy="100" rx="300" ry="200" fill="#4040E0" opacity="0.07"/>
+  <ellipse cx="1100" cy="400" rx="350" ry="250" fill="#8000E0" opacity="0.08"/>
+  <ellipse cx="750" cy="300" rx="250" ry="200" fill="#D000C0" opacity="0.04"/>
+
+  <!-- Neon ring - right side, decorative element -->
+  <circle cx="1200" cy="250" r="180" fill="none" stroke="url(#neon-glow)" stroke-width="100" opacity="0.6"/>
+  <circle cx="1200" cy="250" r="140" fill="#4060FF" opacity="0.03"/>
+
+  <!-- Subtle pulse line background -->
+  <polyline
+    points="0,310 200,310 320,310 420,380 520,220 620,310 750,310 850,310 950,380 1050,220 1150,310 1300,310 1500,310"
+    fill="none"
+    stroke="url(#pulse-grad3)"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.15"
+  />
+
+  <!-- Logo pulse icon (same as v1) -->
+  <polyline
+    points="105,250 145,250 165,290 205,170 225,250 265,250"
+    fill="none"
+    stroke="url(#pulse-grad3)"
+    stroke-width="8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- OpenPulsechain text -->
+  <text x="290" y="258" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="52" font-weight="700" fill="url(#text-grad3)">OpenPulsechain</text>
+
+  <!-- Tagline -->
+  <text x="185" y="340" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="24" fill="#9ca3af" letter-spacing="0.5">Open-source analytics &amp; free API for PulseChain</text>
+
+  <!-- Stats pills -->
+  <rect x="185" y="370" width="140" height="32" rx="16" fill="white" opacity="0.05"/>
+  <text x="210" y="392" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="#00D4FF">2500+ Tokens</text>
+
+  <rect x="345" y="370" width="130" height="32" rx="16" fill="white" opacity="0.05"/>
+  <text x="367" y="392" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="#00D4FF">Free API</text>
+
+  <rect x="495" y="370" width="150" height="32" rx="16" fill="white" opacity="0.05"/>
+  <text x="517" y="392" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="#00D4FF">100% On-chain</text>
+
+  <rect x="665" y="370" width="150" height="32" rx="16" fill="white" opacity="0.05"/>
+  <text x="687" y="392" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="#00D4FF">Open Source</text>
+
+  <!-- URL bottom right -->
+  <text x="1280" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18" fill="#6b7280">openpulsechain.com</text>
+</svg>

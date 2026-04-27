@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="500" viewBox="0 0 1500 500">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#050510"/>
+      <stop offset="100%" stop-color="#0a0a20"/>
+    </linearGradient>
+    <linearGradient id="pulse-line2" x1="0" y1="0.5" x2="1" y2="0.5">
+      <stop offset="0%" stop-color="#00D4FF"/>
+      <stop offset="50%" stop-color="#4060FF"/>
+      <stop offset="100%" stop-color="#D000C0"/>
+    </linearGradient>
+    <linearGradient id="text-grad2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00D4FF"/>
+      <stop offset="100%" stop-color="#8000E0"/>
+    </linearGradient>
+    <radialGradient id="glow-ring2" cx="50%" cy="50%" r="50%">
+      <stop offset="50%" stop-color="#4060FF" stop-opacity="0"/>
+      <stop offset="75%" stop-color="#5070FF" stop-opacity="0.5"/>
+      <stop offset="85%" stop-color="#00D4FF" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#00D4FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="logo-bg2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0a0a25"/>
+      <stop offset="100%" stop-color="#050510"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1500" height="500" fill="url(#bg2)"/>
+
+  <!-- Aurora blobs -->
+  <ellipse cx="1300" cy="80" rx="400" ry="300" fill="#00D4FF" opacity="0.06"/>
+  <ellipse cx="100" cy="420" rx="350" ry="250" fill="#FF0040" opacity="0.04"/>
+  <ellipse cx="600" cy="60" rx="300" ry="200" fill="#4040E0" opacity="0.06"/>
+  <ellipse cx="1100" cy="420" rx="350" ry="250" fill="#8000E0" opacity="0.06"/>
+  <ellipse cx="750" cy="350" rx="250" ry="200" fill="#D000C0" opacity="0.03"/>
+
+  <!-- Subtle pulse line background -->
+  <polyline
+    points="0,320 200,320 320,320 420,380 520,230 620,320 750,320 850,320 950,380 1050,230 1150,320 1300,320 1500,320"
+    fill="none"
+    stroke="url(#pulse-line2)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.1"
+  />
+
+  <!-- Logo circle with glow -->
+  <circle cx="185" cy="220" r="90" fill="url(#logo-bg2)"/>
+  <circle cx="185" cy="220" r="75" fill="none" stroke="url(#glow-ring2)" stroke-width="35" opacity="0.8"/>
+  <circle cx="185" cy="220" r="55" fill="#4060FF" opacity="0.06"/>
+
+  <!-- Pulse line in logo -->
+  <polyline
+    points="115,225 142,225 157,260 185,160 210,225 255,225"
+    fill="none"
+    stroke="url(#pulse-line2)"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- OpenPulsechain text -->
+  <text x="300" y="205" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="54" font-weight="700" fill="url(#text-grad2)">OpenPulsechain</text>
+
+  <!-- Tagline -->
+  <text x="303" y="250" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="22" fill="#9ca3af" letter-spacing="0.5">Open-source analytics &amp; free API for PulseChain</text>
+
+  <!-- Stats pills -->
+  <rect x="303" y="275" width="140" height="32" rx="16" fill="white" opacity="0.05"/>
+  <text x="327" y="297" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="#00D4FF">2500+ Tokens</text>
+
+  <rect x="460" y="275" width="110" height="32" rx="16" fill="white" opacity="0.05"/>
+  <text x="484" y="297" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="#00D4FF">Free API</text>
+
+  <rect x="587" y="275" width="145" height="32" rx="16" fill="white" opacity="0.05"/>
+  <text x="607" y="297" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="#00D4FF">100% On-chain</text>
+
+  <rect x="749" y="275" width="140" height="32" rx="16" fill="white" opacity="0.05"/>
+  <text x="770" y="297" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="#00D4FF">Open Source</text>
+
+  <!-- URL bottom right -->
+  <text x="1270" y="470" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="18" fill="#6b7280">openpulsechain.com</text>
+</svg>

@@ -1,0 +1,31 @@
+{
+  "_comment": "Piteas DEX Aggregator token list summary — 499 tokens. Updated 2026-03-26.",
+  "_source": "https://raw.githubusercontent.com/piteasio/app-tokens/main/piteas-tokenlist.json",
+  "_logo_pattern": "https://raw.githubusercontent.com/piteasio/app-tokens/main/token-logo/{checksumAddress}.png",
+  "_version": "2.3.2",
+  "_timestamp": "2026-03-23T02:13:19.436Z",
+  "_total_tokens": 499,
+  "_chainId": 369,
+  "pinned_tokens": [
+    "PLS", "PLSX", "HEX", "INC", "eHEX",
+    "PRVX", "DAI", "USDC", "USDT", "WETH",
+    "WBTC", "USDL", "hUSDC", "PXDC", "HEXDC"
+  ],
+  "unique_to_piteas_examples": [
+    { "symbol": "PTS", "name": "Piteas Token", "address": "0x2A06a971fE6ffa002fd242d437E3db2b5cC5B433" },
+    { "symbol": "ATROPA", "name": "Atropa", "address": "0xCc78A0acDF847A2C1714D2A925bB4477df5d48a6" },
+    { "symbol": "PUMP", "name": "PUMP.tires", "address": "0xec4252e62C6dE3D655cA9Ce3AfC12E553ebBA274" },
+    { "symbol": "2PHUX", "name": "2PHUX Governance Token", "address": "0x115f3Fa979a936167f9D208a7B7c4d85081e84BD" },
+    { "symbol": "2CC", "name": "2 Cent Club", "address": "0x6293373BF0DAE2050641973D49b7b2f71adC91a1" },
+    { "symbol": "DMND", "name": "HEX.COM DIAMOND", "address": "0xCF409C91B49DD3F796d20Eec20535fDC79A08798" },
+    { "symbol": "ASIC", "name": "ASIC Token", "address": "0x347a96a5BD06D2E15199b032F46fB724d6c73047" },
+    { "symbol": "SOL", "name": "Solana from Ethereum", "address": "0x1c3C50bd18E3f0C7c23666b8e8a843238A359386" },
+    { "symbol": "TONI", "name": "Daytona Finance", "address": "0x9F8182aD65c53Fd78bd07648a1b3DDcB675c6772" },
+    { "symbol": "GENI", "name": "Genius", "address": "0x444444444444C1a66F394025Ac839A535246FCc8" },
+    { "symbol": "LHEX", "name": "LiquidHEX", "address": "0xa73f450E3f17468A64BFdD222b099857Db76634d" },
+    { "symbol": "KEK", "name": "KEK", "address": "0xE362401D1451E8eb38fD66d0c9E23fB080409aB9" },
+    { "symbol": "MINT", "name": "Mintra", "address": "0x207e6b4529840A4fd518f73c68bc9c19B2A15944" },
+    { "symbol": "hUSDC", "name": "USD Coin from Hyperlane", "address": "0xa5B0D537CeBE97f087Dc5FE5732d70719caaEc1D" },
+    { "symbol": "LOVE", "name": "Love.io", "address": "0xb55EE890426341FE45EE6dc788D2D93d25B59063" }
+  ]
+}

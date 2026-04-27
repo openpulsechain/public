@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — OpenPulsechain Extension</title>
+  <meta name="description" content="Privacy policy for the OpenPulsechain Chrome extension — PulseChain analytics tool." />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="canonical" href="https://www.openpulsechain.com/privacy" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d0d20;
+      color: #e0e0e8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.7;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    a {
+      color: #7c8aff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+
+    .effective-date {
+      font-size: 0.875rem;
+      color: #888;
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-top: 2.25rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid rgba(124, 138, 255, 0.15);
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: #c8c8d4;
+    }
+
+    ul {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+      color: #c8c8d4;
+    }
+
+    li strong {
+      color: #e0e0e8;
+    }
+
+    .highlight-box {
+      background: rgba(124, 138, 255, 0.06);
+      border: 1px solid rgba(124, 138, 255, 0.15);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .highlight-box p {
+      margin-bottom: 0.5rem;
+    }
+    .highlight-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    code {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: #a8b0ff;
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.85rem;
+      color: #666;
+      text-align: center;
+    }
+
+    footer a {
+      color: #7c8aff;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 1.5rem 1rem; }
+      h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <h1>Privacy Policy</h1>
+    <p class="effective-date">Effective date: March 31, 2026</p>
+
+    <p>
+      This privacy policy describes how the <strong>OpenPulsechain Chrome Extension</strong>
+      ("the Extension") handles your data. The Extension is a PulseChain analytics tool that
+      provides token safety scores, wallet tracking, bridge statistics, and price data.
+    </p>
+
+    <h2>1. Data Stored Locally</h2>
+    <p>
+      All user data is stored locally on your device using <code>chrome.storage</code>.
+      Nothing is synced to our servers. Locally stored data includes:
+    </p>
+    <ul>
+      <li><strong>Wallet addresses</strong> — public blockchain addresses you enter</li>
+      <li><strong>Wallet labels</strong> — names you assign to your wallets</li>
+      <li><strong>Password hash</strong> — derived via PBKDF2-SHA256 with 100,000 iterations; your actual password is never stored</li>
+      <li><strong>Notification preference</strong> — your on/off setting</li>
+      <li><strong>Last activity timestamp</strong> — used for the auto-lock feature</li>
+    </ul>
+
+    <h2>2. External API Calls</h2>
+    <p>
+      The Extension makes network requests to the following services to provide its features:
+    </p>
+    <ul>
+      <li><strong>safety.openpulsechain.com</strong> — token safety scores, alerts, bridge stats, wallet balances, smart money swaps</li>
+      <li><strong>api.openpulsechain.com</strong> — token prices, search, price history</li>
+      <li><strong>Database API</strong> (read-only) — recent tweets about PulseChain tokens</li>
+      <li><strong>tokens.app.pulsex.com</strong> — token logo images</li>
+    </ul>
+    <p>
+      These requests transmit only the data strictly necessary to fulfill the request
+      (e.g., a token contract address or a public wallet address). No personal information
+      is included in these calls.
+    </p>
+
+    <h2>3. What We Do NOT Collect</h2>
+    <div class="highlight-box">
+      <p>The Extension does <strong>not</strong>:</p>
+      <ul>
+        <li>Collect personal information (name, email, phone number, etc.)</li>
+        <li>Track or access your browsing history</li>
+        <li>Transmit wallet addresses to any third party outside of openpulsechain.com APIs</li>
+        <li>Store or access private keys or seed phrases</li>
+        <li>Require account creation or sign-up</li>
+        <li>Use cookies or tracking pixels</li>
+        <li>Sell, share, or monetize any user data</li>
+      </ul>
+    </div>
+
+    <h2>4. Data Security</h2>
+    <p>
+      Your lock password is protected using PBKDF2-SHA256 with a random 16-byte salt and
+      100,000 iterations. The Extension includes brute-force protection and automatic
+      locking after a period of inactivity. Since all data resides locally on your device,
+      there is no server-side database to breach.
+    </p>
+
+    <h2>5. Data Retention and Deletion</h2>
+    <p>
+      All data persists locally until you explicitly remove it. You can delete all stored
+      data at any time by uninstalling the Extension or clearing its storage through your
+      browser's extension management page.
+    </p>
+
+    <h2>6. Third-Party Services</h2>
+    <p>
+      The Extension relies on the APIs listed in Section 2. These services are operated by
+      OpenPulsechain and PulseX. No data is shared with advertising networks, analytics
+      providers, or any other third parties.
+    </p>
+
+    <h2>7. Children's Privacy</h2>
+    <p>
+      The Extension is not directed at children under 13. We do not knowingly collect any
+      information from children.
+    </p>
+
+    <h2>8. Changes to This Policy</h2>
+    <p>
+      We may update this privacy policy from time to time. Changes will be reflected on this
+      page with an updated effective date. Continued use of the Extension after changes
+      constitutes acceptance of the revised policy.
+    </p>
+
+    <h2>9. Contact</h2>
+    <p>
+      If you have any questions about this privacy policy, you can reach us at
+      <a href="mailto:contact@openpulsechain.com">contact@openpulsechain.com</a>.
+    </p>
+
+    <footer>
+      <a href="https://www.openpulsechain.com">OpenPulsechain</a> &mdash; Open-source PulseChain analytics
+    </footer>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@keyframes liquid-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(15vw, -10vh) scale(1.1); }
+  66% { transform: translate(-10vw, 15vh) scale(0.9); }
+}
+@keyframes liquid-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-15vw, 15vh) scale(1.2); }
+  66% { transform: translate(10vw, -10vh) scale(0.85); }
+}
+@keyframes liquid-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(10vw, 10vh) scale(0.9); }
+  66% { transform: translate(-15vw, -15vh) scale(1.15); }
+}

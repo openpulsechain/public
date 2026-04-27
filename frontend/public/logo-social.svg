@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#050510"/>
+      <stop offset="100%" stop-color="#0a0a20"/>
+    </linearGradient>
+    <linearGradient id="pulse" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00D4FF"/>
+      <stop offset="100%" stop-color="#8000E0"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="400" height="400" rx="80" fill="url(#bg)"/>
+  <!-- Subtle glow -->
+  <circle cx="200" cy="200" r="120" fill="#00D4FF" opacity="0.06"/>
+  <circle cx="200" cy="200" r="80" fill="#8000E0" opacity="0.04"/>
+  <!-- Pulse line -->
+  <polyline
+    points="60,200 130,200 160,280 220,120 250,200 340,200"
+    fill="none"
+    stroke="url(#pulse)"
+    stroke-width="16"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
