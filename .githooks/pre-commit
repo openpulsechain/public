@@ -1,0 +1,57 @@
+#!/bin/bash
+# Pre-commit hook — block hardcoded secrets BEFORE they enter git history.
+# Install: git config core.hooksPath .githooks
+
+RED='\033[0;31m'
+NC='\033[0m'
+
+PATTERNS=(
+  'eyJ[a-zA-Z0-9_-]{20,}\.[a-zA-Z0-9_-]{20,}\.[a-zA-Z0-9_-]{20,}'  # JWT tokens
+  'sk-[a-zA-Z0-9]{20,}'                                               # OpenAI/Anthropic keys
+  'sk_live_[a-zA-Z0-9]{20,}'                                          # API secret keys
+  '-----BEGIN.*PRIVATE KEY-----'                                       # Private keys
+  'SUPABASE_SERVICE_ROLE_KEY\s*=\s*["\x27]eyJ'                        # Service role keys hardcoded
+  'supabase\.co.*apikey.*eyJ'                                          # Direct API calls with embedded key
+  '[a-z]{10,}\.supabase\.co'                                           # Hardcoded database project URL
+)
+
+# Only scan staged files (not the whole repo)
+STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|py|json|yaml|yml|toml|env)$' || true)
+
+if [ -z "$STAGED" ]; then
+  exit 0
+fi
+
+FOUND=0
+for pattern in "${PATTERNS[@]}"; do
+  MATCHES=$(echo "$STAGED" | xargs grep -lnE "$pattern" 2>/dev/null \
+    | grep -v 'node_modules' \
+    | grep -v '.githooks' \
+    | grep -v 'security-scan.yml' \
+    || true)
+  if [ -n "$MATCHES" ]; then
+    # Filter out safe patterns (env var reads, not hardcoded values)
+    REAL_MATCHES=$(echo "$STAGED" | xargs grep -nE "$pattern" 2>/dev/null \
+      | grep -v 'os.environ' \
+      | grep -v 'os.getenv' \
+      | grep -v 'import.meta.env' \
+      | grep -v 'process.env' \
+      | grep -v '.env.example' \
+      | grep -v '.githooks' \
+      | grep -v 'security-scan.yml' \
+      | grep -v 'REDACTED' \
+      || true)
+    if [ -n "$REAL_MATCHES" ]; then
+      echo -e "${RED}BLOCKED — hardcoded secret detected:${NC}"
+      echo "$REAL_MATCHES"
+      FOUND=1
+    fi
+  fi
+done
+
+if [ "$FOUND" -eq 1 ]; then
+  echo ""
+  echo -e "${RED}Commit REFUSED. Move secrets to environment variables.${NC}"
+  echo "Use os.environ (Python) or import.meta.env (Vite) or process.env (Node)."
+  exit 1
+fi

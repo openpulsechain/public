@@ -88,7 +88,7 @@ export function PricingPage() {
             <p className="text-gray-500 text-sm mt-1">Full API + MCP access</p>
           </div>
           <div>
-            <span className="text-4xl font-bold text-white">€29</span>
+            <span className="text-4xl font-bold text-white">$29</span>
             <span className="text-gray-500 text-sm">/month</span>
           </div>
           <ul className="space-y-3 text-sm text-gray-300">

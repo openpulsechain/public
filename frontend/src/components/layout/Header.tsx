@@ -293,7 +293,7 @@ export function Header({ activePage }: HeaderProps) {
           </button>
           <StatusErrorBoundary><RpcStatusIndicator /></StatusErrorBoundary>
           <a
-            href="https://github.com/openpulsechain/openpulsechain"
+            href="https://github.com/openpulsechain/public"
             target="_blank"
             rel="noopener noreferrer"
             className="ml-1 text-gray-400 hover:text-[#00D4FF] transition-colors"
@@ -341,7 +341,7 @@ export function Header({ activePage }: HeaderProps) {
             </Link>
           ))}
           <a
-            href="https://github.com/openpulsechain/openpulsechain"
+            href="https://github.com/openpulsechain/public"
             target="_blank"
             rel="noopener noreferrer"
             className="block px-4 py-2.5 text-sm text-gray-400 hover:text-[#00D4FF] transition-colors"

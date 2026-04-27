@@ -1151,7 +1151,7 @@ export const en = {
     rest_api_intro: 'Production-grade REST API for developers. Standard JSON responses, authenticated via API key. Full documentation included with your subscription.',
     // Pricing
     pricing_title: 'API Access',
-    pricing_price: '€29',
+    pricing_price: '$29',
     pricing_period: '/month',
     pricing_desc: 'Full access to all REST API endpoints with dedicated API key.',
     pricing_feat_endpoints: 'All endpoints (tokens, safety, smart money, bridge, leagues)',

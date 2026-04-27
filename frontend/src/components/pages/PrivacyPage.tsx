@@ -113,7 +113,7 @@ export function PrivacyPage() {
           OpenPulsechain is fully open-source. You can audit the entire codebase, including the Chrome extension,
           API server, and all indexers on our{' '}
           <a
-            href="https://github.com/openpulsechain/openpulsechain"
+            href="https://github.com/openpulsechain/public"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#00D4FF] hover:underline"

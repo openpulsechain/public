@@ -1153,7 +1153,7 @@ export const fr: typeof en = {
     rest_api_intro: 'API REST de production pour développeurs. Réponses JSON standard, authentification par clé API. Documentation complète incluse avec votre abonnement.',
     // Pricing
     pricing_title: 'Accès API',
-    pricing_price: '€29',
+    pricing_price: '$29',
     pricing_period: '/mois',
     pricing_desc: 'Accès complet à tous les endpoints REST API avec clé API dédiée.',
     pricing_feat_endpoints: 'Tous les endpoints (tokens, sécurité, smart money, bridge, ligues)',

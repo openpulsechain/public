@@ -84,7 +84,7 @@ export function ApiPage() {
           >
             <Zap className="h-4 w-4" />
             REST API
-            <span className="rounded-full bg-[#00D4FF]/20 text-[#00D4FF] border border-[#00D4FF]/30 px-1.5 py-0.5 text-[10px] font-bold leading-none">€29/mo</span>
+            <span className="rounded-full bg-[#00D4FF]/20 text-[#00D4FF] border border-[#00D4FF]/30 px-1.5 py-0.5 text-[10px] font-bold leading-none">$29/mo</span>
           </button>
         </div>
       </div>
@@ -236,7 +236,7 @@ export function ApiPage() {
             </div>
 
             <div className="flex items-center gap-3 text-xs text-gray-500">
-              <a href="https://github.com/openpulsechain/openpulsechain/tree/main/mcp-server" target="_blank" rel="noopener noreferrer" className="text-[#00D4FF] hover:underline">GitHub</a>
+              <a href="https://github.com/openpulsechain/public/tree/main/mcp-server" target="_blank" rel="noopener noreferrer" className="text-[#00D4FF] hover:underline">GitHub</a>
               <span>•</span>
               <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white hover:underline">MCP Protocol Spec</a>
               <span>•</span>
@@ -259,12 +259,12 @@ export function ApiPage() {
                   <span className="text-lg text-gray-400">{t.api.pricing_period}</span>
                 </div>
                 <p className="text-sm text-gray-400 mt-2 max-w-xs">{t.api.pricing_desc}</p>
-                <button
-                  disabled
-                  className="mt-4 w-full md:w-auto rounded-xl bg-gradient-to-r from-[#00D4FF] to-[#8000E0] px-8 py-2.5 text-sm font-semibold text-white opacity-60 cursor-not-allowed"
+                <a
+                  href="/pricing"
+                  className="mt-4 inline-block w-full md:w-auto rounded-xl bg-gradient-to-r from-[#00D4FF] to-[#8000E0] px-8 py-2.5 text-sm font-semibold text-white text-center hover:opacity-90 transition-opacity"
                 >
-                  {t.api.pricing_coming_soon}
-                </button>
+                  Get API Key
+                </a>
               </div>
 
               {/* Right — Features */}
@@ -359,7 +359,7 @@ export function ApiPage() {
       {/* Links (always visible) */}
       <section className="flex flex-wrap gap-3 pb-6">
         <a
-          href="https://github.com/openpulsechain/openpulsechain"
+          href="https://github.com/openpulsechain/public"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-300 hover:bg-white/5 transition-colors"

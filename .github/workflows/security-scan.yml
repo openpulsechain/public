@@ -1,0 +1,225 @@
+name: Security Scanner
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly scan (Monday 6am UTC) — not every 6h to avoid email spam
+    - cron: '0 6 * * 1'
+
+jobs:
+  secret-scan:
+    name: Secret & Sensitive Data Scanner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for hardcoded secrets
+        run: |
+          echo "=== SECRET PATTERN SCAN ==="
+          FOUND=0
+
+          # Patterns to detect
+          PATTERNS=(
+            "SUPABASE_SERVICE_ROLE_KEY\s*="
+            "sk-[a-zA-Z0-9]{20,}"
+            "-----BEGIN.*PRIVATE KEY-----"
+            "password\s*=\s*['\"][^'\"]{8,}"
+            "api_key\s*=\s*['\"][^'\"]{8,}"
+            "secret_key\s*=\s*['\"][^'\"]{8,}"
+            "auth_token\s*=\s*['\"][^'\"]{8,}"
+            "eyJ[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]{10,}"
+            "0x[a-fA-F0-9]{64}"
+          )
+
+          for pattern in "${PATTERNS[@]}"; do
+            MATCHES=$(grep -rn --include="*.py" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.json" --include="*.env*" --include="*.yml" --include="*.yaml" --include="*.toml" -E "$pattern" . \
+              --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude="*.lock" \
+              | grep -v "os.environ" \
+              | grep -v "os.getenv" \
+              | grep -v "import.meta.env" \
+              | grep -v "process.env" \
+              | grep -v ".env.example" \
+              | grep -v "security-scan.yml" \
+              | grep -v "honeypot_checker.py" \
+              || true)
+            if [ -n "$MATCHES" ]; then
+              echo "ALERT: Pattern '$pattern' found:"
+              echo "$MATCHES"
+              FOUND=1
+            fi
+          done
+
+          if [ "$FOUND" -eq 1 ]; then
+            echo ""
+            echo "::error::Potential secrets or sensitive data detected! Review the matches above."
+            exit 1
+          else
+            echo "No hardcoded secrets found."
+          fi
+
+      - name: Scan for exposed scraping methods
+        run: |
+          echo "=== SCRAPING METHOD SCAN ==="
+          FOUND=0
+
+          FORBIDDEN=(
+            "playwright"
+            "puppeteer"
+            "selenium"
+            "headless.*browser"
+            "navigator.webdriver"
+            "stealth"
+            "anti.detect"
+          )
+
+          for term in "${FORBIDDEN[@]}"; do
+            MATCHES=$(grep -rnil --include="*.py" --include="*.ts" --include="*.tsx" --include="*.js" \
+              -E "$term" . \
+              --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist \
+              || true)
+            if [ -n "$MATCHES" ]; then
+              echo "ALERT: Scraping method '$term' found in:"
+              echo "$MATCHES"
+              FOUND=1
+            fi
+          done
+
+          if [ "$FOUND" -eq 1 ]; then
+            echo ""
+            echo "::error::Scraping implementation details detected in repo! These must be in a private repo only."
+            exit 1
+          else
+            echo "No scraping method references found."
+          fi
+
+      - name: Scan for exposed Supabase URLs
+        run: |
+          echo "=== SUPABASE URL SCAN ==="
+          MATCHES=$(grep -rn --include="*.json" --include="*.ts" --include="*.tsx" --include="*.js" --include="*.py" \
+            -E "[a-z]{20}\.supabase\.co" . \
+            --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist \
+            | grep -v "os.environ" \
+            | grep -v "os.getenv" \
+            | grep -v "import.meta.env" \
+            | grep -v "process.env" \
+            | grep -v ".env" \
+            | grep -v "security-scan.yml" \
+            || true)
+
+          if [ -n "$MATCHES" ]; then
+            echo "ALERT: Hardcoded Supabase project URL found:"
+            echo "$MATCHES"
+            echo "::error::Supabase URL must not be hardcoded. Use environment variables."
+            exit 1
+          else
+            echo "No hardcoded Supabase URLs found."
+          fi
+
+      - name: Scan for unauthenticated endpoints
+        run: |
+          echo "=== ENDPOINT AUTH SCAN ==="
+          # Check that all /cron/ endpoints call _check_cron_secret
+          CRON_ENDPOINTS=$(grep -n '@app\.\(get\|post\).*"/cron/' . -r --include="*.py" \
+            --exclude-dir=node_modules --exclude-dir=.git || true)
+
+          if [ -n "$CRON_ENDPOINTS" ]; then
+            echo "Cron endpoints found:"
+            echo "$CRON_ENDPOINTS"
+
+            # For each file with cron endpoints, check if _check_cron_secret is called
+            FILES=$(echo "$CRON_ENDPOINTS" | cut -d: -f1 | sort -u)
+            for f in $FILES; do
+              UNPROTECTED=$(awk '
+                /@app\.(get|post).*"\/cron\// { found=1; line=NR; next }
+                found && /def / {
+                  fn_line=NR
+                  fn_name=$0
+                  found=2
+                  next
+                }
+                found==2 && /_check_cron_secret/ { found=0; next }
+                found==2 && NR > fn_line + 5 {
+                  print "UNPROTECTED: " fn_name " (line " line ")"
+                  found=0
+                }
+              ' "$f")
+
+              if [ -n "$UNPROTECTED" ]; then
+                echo "::warning::$f: $UNPROTECTED"
+              fi
+            done
+          fi
+          echo "Endpoint auth scan complete."
+
+      - name: Check CORS configuration
+        run: |
+          echo "=== CORS SCAN ==="
+          LOCALHOST_CORS=$(grep -rn "localhost" . --include="*.py" \
+            --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist \
+            | grep -i "origin\|cors\|allow" \
+            || true)
+
+          if [ -n "$LOCALHOST_CORS" ]; then
+            echo "::warning::localhost found in CORS configuration:"
+            echo "$LOCALHOST_CORS"
+          else
+            echo "No localhost in CORS config."
+          fi
+          echo "CORS scan complete."
+
+  git-history-scan:
+    name: Git History Secret Scan (trufflehog)
+    runs-on: ubuntu-latest
+    # Non-blocking: GitHub caches orphaned git objects for up to 90 days
+    # after history rewrites. Remove continue-on-error once resolved.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog — scan full git history for leaked secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified --fail
+
+  dependency-audit:
+    name: Dependency Vulnerability Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: pip-audit — token_safety
+        run: |
+          pip install pip-audit
+          pip-audit -r token_safety/requirements.txt --ignore-vuln PYSEC-2024-* || true
+
+      - name: pip-audit — api
+        run: pip-audit -r api/requirements.txt --ignore-vuln PYSEC-2024-* || true
+
+      - name: pip-audit — indexers
+        run: pip-audit -r indexers/requirements.txt --ignore-vuln PYSEC-2024-* || true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: npm audit — frontend
+        run: cd frontend && npm audit --audit-level=high || true
+
+      - name: npm audit — extension
+        run: cd extension && npm audit --audit-level=high || true
+
+      - name: npm audit — mcp-server
+        run: cd mcp-server && npm audit --audit-level=high || true

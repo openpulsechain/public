@@ -29,7 +29,7 @@ export function Footer() {
       <p>
         {t.footer.about}{' '}
         <a
-          href="https://github.com/openpulsechain/openpulsechain"
+          href="https://github.com/openpulsechain/public"
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-400 hover:text-[#00D4FF] transition-colors"

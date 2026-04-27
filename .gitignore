@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+.next/
+
+# Environment
+.env
+.env.local
+.env.production
+.env*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Claude Code (local config only)
+CLAUDE.md
+.claude/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Database
+*.sqlite
+*.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Cache
+.cache/
+.turbo/
+
+# Extension builds
+*.zip
+
+# Token list dumps
+pump_tires_tokens.json
+extension/piteas-tokenlist.json
+extension/store-assets/
+frontend/pulsex-*.json
+billing/.env
