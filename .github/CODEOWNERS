@@ -1,0 +1,28 @@
+# CODEOWNERS — required reviewers for the Safety Pillar
+#
+# The Safety Pillar (Honeypot + Scam Analysis) is the product's core.
+# Any change to these files requires review from @openpulsechain before
+# merge. This is a guardrail — not a veto — to force a second pair of
+# eyes on pillar changes.
+#
+# Documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ─── Safety Pillar: shared component + pages ──────────────────────────
+/frontend/src/components/safety/               @openpulsechain
+/frontend/src/components/pages/SafetyDashboardPage.tsx   @openpulsechain
+/frontend/src/components/pages/TokenSafetyPage.tsx       @openpulsechain
+/frontend/src/lib/safetyContract.ts             @openpulsechain
+/frontend/scripts/safety-invariant-check.mjs    @openpulsechain
+
+# ─── Safety Pillar: backend ────────────────────────────────────────────
+/token_safety/analyzer.py          @openpulsechain
+/token_safety/scam_risk.py         @openpulsechain
+/token_safety/scam_radar.py        @openpulsechain
+/token_safety/honeypot_checker.py  @openpulsechain
+/token_safety/safety_contract.py   @openpulsechain
+/token_safety/main.py              @openpulsechain
+/token_safety/tests/               @openpulsechain
+/token_safety/Dockerfile           @openpulsechain
+
+# ─── Extension: safety UI ──────────────────────────────────────────────
+/extension/src/popup/components/SafetyCheck.tsx  @openpulsechain
