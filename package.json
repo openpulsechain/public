@@ -1,0 +1,9 @@
+{
+  "name": "openpulsechain-mcp-root",
+  "private": true,
+  "scripts": {
+    "install": "cd mcp-server && npm install",
+    "build": "cd mcp-server && npm run build",
+    "start": "node mcp-server/dist/index.js"
+  }
+}
