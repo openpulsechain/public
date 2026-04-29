@@ -36,14 +36,14 @@ logger = logging.getLogger("token_safety")
 
 # ── Background Scheduler ─────────────────────────────────────────
 
-RADAR_INTERVAL_MIN = int(os.environ.get("RADAR_INTERVAL_MIN", "30"))
-BATCH_INTERVAL_HOURS = int(os.environ.get("BATCH_INTERVAL_HOURS", "12"))
-LEAGUE_INTERVAL_HOURS = int(os.environ.get("LEAGUE_INTERVAL_HOURS", "6"))
-LP_MONITOR_INTERVAL_HOURS = int(os.environ.get("LP_MONITOR_INTERVAL_HOURS", "2"))
-LP_MONITOR_LIMIT = int(os.environ.get("LP_MONITOR_LIMIT", "50"))
-BATCH_LIMIT = int(os.environ.get("BATCH_LIMIT", "200"))
-BLACKLIST_SYNC_INTERVAL_HOURS = int(os.environ.get("BLACKLIST_SYNC_INTERVAL_HOURS", "24"))
-EXPLOIT_SYNC_INTERVAL_HOURS = int(os.environ.get("EXPLOIT_SYNC_INTERVAL_HOURS", "168"))  # Weekly
+RADAR_INTERVAL_MIN = int(os.environ.get("RADAR_INTERVAL_MIN", "0"))
+BATCH_INTERVAL_HOURS = int(os.environ.get("BATCH_INTERVAL_HOURS", "0"))
+LEAGUE_INTERVAL_HOURS = int(os.environ.get("LEAGUE_INTERVAL_HOURS", "0"))
+LP_MONITOR_INTERVAL_HOURS = int(os.environ.get("LP_MONITOR_INTERVAL_HOURS", "0"))
+LP_MONITOR_LIMIT = int(os.environ.get("LP_MONITOR_LIMIT", "0"))
+BATCH_LIMIT = int(os.environ.get("BATCH_LIMIT", "0"))
+BLACKLIST_SYNC_INTERVAL_HOURS = int(os.environ.get("BLACKLIST_SYNC_INTERVAL_HOURS", "0"))
+EXPLOIT_SYNC_INTERVAL_HOURS = int(os.environ.get("EXPLOIT_SYNC_INTERVAL_HOURS", "0"))
 ENABLE_SCHEDULER = os.environ.get("ENABLE_SCHEDULER", "true").lower() == "true"
 
 
@@ -278,9 +278,8 @@ def chrome_security(request: Request):
 
 
 # Fresh analysis rate limiter — simple in-process counter per IP.
-# Prevents DoS amplification: each fresh=true triggers 5-10 external HTTP calls.
 _fresh_rate: dict = {}  # ip → [timestamps]
-FRESH_LIMIT_PER_MIN = 5
+FRESH_LIMIT_PER_MIN = int(os.environ.get("FRESH_LIMIT_PER_MIN", "5"))
 
 def _check_fresh_rate(request: Request):
     ip = get_remote_address(request)

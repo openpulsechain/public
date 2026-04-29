@@ -22,62 +22,29 @@ X402_FACILITATOR = os.getenv("X402_FACILITATOR_URL", "https://x402.org/facilitat
 X402_NETWORK = os.getenv("X402_NETWORK", "eip155:8453")  # Base mainnet
 BILLING_API_URL = os.getenv("BILLING_API_URL", "")  # Internal URL of billing service
 
-# Internal bypass — site + extension + dev servers
-INTERNAL_ORIGINS = {
-    "https://openpulsechain.com",
-    "https://www.openpulsechain.com",
-    "http://localhost:5173",
-    "http://localhost:3000",
-}
+# Internal bypass — site + extension (configured via env in production)
+INTERNAL_ORIGINS = set(
+    o.strip() for o in os.getenv("INTERNAL_ORIGINS", "").split(",") if o.strip()
+)
 # Legacy env var API keys (fallback, used until all keys are in DB)
 _raw_keys = os.getenv("API_KEYS", "")
 VALID_API_KEYS = set(k.strip() for k in _raw_keys.split(",") if k.strip())
 
 
 def validate_api_key(key: str) -> bool:
-    """Validate an API key via DB lookup (primary) or env var (fallback).
-    DB lookup uses SHA-256 hash — plaintext key never leaves this function."""
-    # Legacy env var check (fast, no network)
+    """Validate an API key via DB hash lookup or env var fallback.
+    Implementation details redacted in public repo — see private repo."""
     if key in VALID_API_KEYS:
         return True
-    # DB check via billing service (Stripe subscribers)
-    if BILLING_API_URL:
-        try:
-            import requests
-            key_hash = hashlib.sha256(key.encode()).hexdigest()
-            resp = requests.get(
-                f"{BILLING_API_URL}/api/billing/validate-key",
-                params={"key_hash": key_hash},
-                timeout=3,
-            )
-            if resp.status_code == 200:
-                data = resp.json()
-                return data.get("valid", False)
-        except Exception as e:
-            logger.warning(f"Billing API key validation failed: {e}")
+    # DB validation via billing service (SHA-256 hash lookup)
+    # Full implementation in private repo
     return False
 
 
 # ── Pricing (USD per call) ────────────────────────────────────────
-# Routes NOT listed here remain free (health, aggregate stats, bridge, league summaries).
-PRICING: dict[str, str] = {
-    "GET /api/v1/token/*/safety":               "$0.01",
-    "GET /api/v1/token/*/liquidity":            "$0.005",
-    "GET /api/v1/tokens/safety/batch":          "$0.005",
-    "GET /api/v1/alerts/recent":                "$0.01",
-    "GET /api/v1/address/*/risk":               "$0.01",
-    "GET /api/v1/deployer/*":                   "$0.02",
-    "GET /api/v1/token/*/deployer":             "$0.02",
-    "GET /api/v1/smart-money/feed":             "$0.02",
-    "GET /api/v1/smart-money/swaps":            "$0.01",
-    "GET /api/v1/wallet/*/swaps":               "$0.005",
-    "GET /api/v1/wallet/*/balances":            "$0.005",
-    "GET /api/v1/token/*/tweets":               "$0.005",
-    "GET /api/v1/leagues/rank/*":               "$0.005",
-    "GET /api/v1/leagues/*/holders":            "$0.005",
-    "GET /api/v1/leagues/*/families":           "$0.005",
-    "GET /api/v1/leagues/*/families/*/members": "$0.005",
-}
+# Per-endpoint pricing configured via environment or /.well-known/x402
+# See https://openpulsechain.com/pricing for current rates
+PRICING: dict[str, str] = {}  # Loaded from env in production
 
 
 def build_x402_routes():

@@ -26,19 +26,19 @@ FEE_CHECKER_CONTRACT = "0xBe4A121B0fa604438B61e49a4a818A00F50c09e1"
 # WPLS (Wrapped PLS) — base token for simulations
 WPLS_ADDRESS = "0xA1077a294dDE1B09bB078844df40758a5D0f9a27"
 
-# Scoring weights (total = 100)
-WEIGHT_HONEYPOT = 30
-WEIGHT_CONTRACT = 25
-WEIGHT_LP = 20
-WEIGHT_HOLDERS = 15
-WEIGHT_AGE = 10
+# Scoring weights and thresholds configured via environment in production
+# 5 pillars: honeypot, contract, liquidity, holders, age (total = 100)
+WEIGHT_HONEYPOT = int(os.getenv("WEIGHT_HONEYPOT", "0"))
+WEIGHT_CONTRACT = int(os.getenv("WEIGHT_CONTRACT", "0"))
+WEIGHT_LP = int(os.getenv("WEIGHT_LP", "0"))
+WEIGHT_HOLDERS = int(os.getenv("WEIGHT_HOLDERS", "0"))
+WEIGHT_AGE = int(os.getenv("WEIGHT_AGE", "0"))
 
-# Thresholds
-HOLDER_CONCENTRATION_DANGER = 50  # top 10 hold >50% = danger
-HOLDER_CONCENTRATION_WARNING = 30  # top 10 hold >30% = warning
-LP_LOCK_MIN_DAYS = 30  # minimum LP lock duration for safety
-MIN_HOLDERS_FOR_SAFETY = 50
-MIN_TOKEN_AGE_DAYS = 7
+HOLDER_CONCENTRATION_DANGER = int(os.getenv("HOLDER_CONCENTRATION_DANGER", "50"))
+HOLDER_CONCENTRATION_WARNING = int(os.getenv("HOLDER_CONCENTRATION_WARNING", "30"))
+LP_LOCK_MIN_DAYS = int(os.getenv("LP_LOCK_MIN_DAYS", "30"))
+MIN_HOLDERS_FOR_SAFETY = int(os.getenv("MIN_HOLDERS_FOR_SAFETY", "50"))
+MIN_TOKEN_AGE_DAYS = int(os.getenv("MIN_TOKEN_AGE_DAYS", "7"))
 
 # ── Token Categories ─────────────────────────────────────────────
 CATEGORY_INFRASTRUCTURE = "infrastructure"    # WPLS — wrapped native token
