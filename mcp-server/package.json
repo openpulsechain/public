@@ -1,6 +1,6 @@
 {
   "name": "@openpulsechain/mcp-server",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "mcpName": "io.github.openpulsechain/analytics",
   "description": "MCP server for OpenPulsechain Analytics — gives AI assistants access to PulseChain on-chain data. Included: token prices, safety scores, bridge stats, leagues. Pro (API key): AML risk, deployer reputation, smart money feed, wallet tracking, funding tree.",
   "type": "module",

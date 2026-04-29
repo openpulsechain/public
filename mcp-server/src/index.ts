@@ -30,6 +30,17 @@ import { z } from 'zod'
 const API = 'https://api.openpulsechain.com'
 const SAFETY = 'https://safety.openpulsechain.com'
 const PRICING_URL = 'https://openpulsechain.com/pricing'
+const FETCH_TIMEOUT_MS = 15_000
+
+// ── Input validation ──
+const ETH_ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/
+function validateAddress(address: string): string {
+  const clean = address.trim().toLowerCase()
+  if (!ETH_ADDRESS_RE.test(clean)) {
+    throw new Error('Invalid address format. Expected 0x followed by 40 hex characters.')
+  }
+  return clean
+}
 
 // ── Tier detection ──
 // If an API key is set, we're in PRO mode — forward it on every request and
@@ -41,17 +52,23 @@ const HAS_API_KEY = API_KEY.length > 0
 async function fetchJSON(url: string): Promise<any> {
   const headers: Record<string, string> = { 'Accept': 'application/json' }
   if (HAS_API_KEY) headers['Authorization'] = `Bearer ${API_KEY}`
-  const res = await fetch(url, { headers })
-  if (!res.ok) {
-    if (res.status === 401 || res.status === 403) {
-      throw new Error(
-        `API ${res.status}: This endpoint requires a valid API key. ` +
-        `Get one at ${PRICING_URL}`
-      )
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
+  try {
+    const res = await fetch(url, { headers, signal: controller.signal })
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        throw new Error(
+          `API ${res.status}: This endpoint requires a valid API key. ` +
+          `Get one at ${PRICING_URL}`
+        )
+      }
+      throw new Error(`API request failed with status ${res.status}`)
     }
-    throw new Error(`HTTP ${res.status}: ${url}`)
+    return res.json()
+  } finally {
+    clearTimeout(timer)
   }
-  return res.json()
 }
 
 // ── Pro tier gate ──
@@ -95,7 +112,7 @@ function proGate<Args>(
 
 const server = new McpServer({
   name: 'openpulsechain',
-  version: '1.1.0',
+  version: '1.2.1',
 })
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -109,7 +126,8 @@ server.tool(
     address: z.string().describe('Token contract address (0x...) — e.g. 0x2b591e99afe9f32eaa6214f7b7629768c40eeb39 for HEX'),
   },
   async ({ address }) => {
-    const data = await fetchJSON(`${API}/api/v1/tokens/${address}/price`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${API}/api/v1/tokens/${addr}/price`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   }
 )
@@ -121,7 +139,8 @@ server.tool(
     address: z.string().describe('Token contract address (0x...)'),
   },
   async ({ address }) => {
-    const data = await fetchJSON(`${API}/api/v1/tokens/${address}`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${API}/api/v1/tokens/${addr}`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   }
 )
@@ -131,11 +150,12 @@ server.tool(
   'Get historical price data (OHLCV) for a PulseChain token. Limited to 30 days without API key; Pro unlocks full history.',
   {
     address: z.string().describe('Token contract address (0x...)'),
-    days: z.number().optional().describe('Number of days of history (default 30, max 1000)'),
+    days: z.number().min(1).max(1000).optional().describe('Number of days of history (default 30, max 1000)'),
   },
   async ({ address, days }) => {
     const d = days ?? 30
-    const data = await fetchJSON(`${API}/api/v1/tokens/${address}/history?days=${d}`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${API}/api/v1/tokens/${addr}/history?days=${d}`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   }
 )
@@ -145,7 +165,7 @@ server.tool(
   'List top PulseChain tokens sorted by volume, liquidity, or symbol.',
   {
     sort_by: z.enum(['volume', 'liquidity', 'symbol']).optional().describe('Sort field (default: volume)'),
-    limit: z.number().optional().describe('Number of tokens to return (default 20, max 500)'),
+    limit: z.number().min(1).max(500).optional().describe('Number of tokens to return (default 20, max 500)'),
   },
   async ({ sort_by, limit }) => {
     const s = sort_by ?? 'volume'
@@ -159,7 +179,7 @@ server.tool(
   'get_top_pairs',
   'List top PulseX DEX trading pairs by volume.',
   {
-    limit: z.number().optional().describe('Number of pairs (default 20, max 500)'),
+    limit: z.number().min(1).max(500).optional().describe('Number of pairs (default 20, max 500)'),
   },
   async ({ limit }) => {
     const data = await fetchJSON(`${API}/api/v1/pairs?limit=${limit ?? 20}`)
@@ -184,7 +204,8 @@ server.tool(
     address: z.string().describe('Token contract address (0x...)'),
   },
   async ({ address }) => {
-    const data = await fetchJSON(`${SAFETY}/api/v1/token/${address}/safety`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/token/${addr}/safety`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   }
 )
@@ -196,7 +217,8 @@ server.tool(
     address: z.string().describe('Token contract address (0x...)'),
   },
   async ({ address }) => {
-    const data = await fetchJSON(`${SAFETY}/api/v1/token/${address}/liquidity`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/token/${addr}/liquidity`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   }
 )
@@ -212,7 +234,8 @@ server.tool(
     address: z.string().describe('Wallet or contract address (0x...)'),
   },
   proGate<{ address: string }>(async ({ address }) => {
-    const data = await fetchJSON(`${SAFETY}/api/v1/address/${address}/risk`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/address/${addr}/risk`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   })
 )
@@ -224,7 +247,8 @@ server.tool(
     address: z.string().describe('Deployer wallet address (0x...)'),
   },
   proGate<{ address: string }>(async ({ address }) => {
-    const data = await fetchJSON(`${SAFETY}/api/v1/deployer/${address}`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/deployer/${addr}`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   })
 )
@@ -235,7 +259,7 @@ server.tool(
   {
     alert_type: z.enum(['honeypot', 'lp_removal', 'whale_dump']).optional()
       .describe('Filter by alert type (omit for all)'),
-    limit: z.number().optional().describe('Number of alerts (default 20, max 200)'),
+    limit: z.number().min(1).max(200).optional().describe('Number of alerts (default 20, max 200)'),
   },
   proGate<{ alert_type?: 'honeypot' | 'lp_removal' | 'whale_dump'; limit?: number }>(async ({ alert_type, limit }) => {
     let url = `${SAFETY}/api/v1/alerts/recent?limit=${limit ?? 20}`
@@ -249,11 +273,11 @@ server.tool(
   'get_smart_money_feed',
   '[PRO] Get smart money / whale activity feed: large wallet movements and recent swaps on PulseX. Requires OPENPULSECHAIN_API_KEY.',
   {
-    hours: z.number().optional().describe('Lookback period in hours (default 24, max 168)'),
-    min_usd: z.number().optional().describe('Minimum swap value in USD (default 5000)'),
+    hours: z.number().min(1).max(168).optional().describe('Lookback period in hours (default 24, max 168)'),
+    min_usd: z.number().min(100).optional().describe('Minimum swap value in USD (default 1000)'),
   },
   proGate<{ hours?: number; min_usd?: number }>(async ({ hours, min_usd }) => {
-    const data = await fetchJSON(`${SAFETY}/api/v1/smart-money/feed?hours=${hours ?? 24}&min_usd=${min_usd ?? 5000}`)
+    const data = await fetchJSON(`${SAFETY}/api/v1/smart-money/feed?hours=${hours ?? 24}&min_usd=${min_usd ?? 1000}`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   })
 )
@@ -262,8 +286,8 @@ server.tool(
   'get_recent_swaps',
   '[PRO] Get recent large swaps on PulseX DEX. Requires OPENPULSECHAIN_API_KEY.',
   {
-    minutes: z.number().optional().describe('Lookback in minutes (default 60, max 1440)'),
-    min_usd: z.number().optional().describe('Minimum swap USD value (default 1000)'),
+    minutes: z.number().min(5).max(1440).optional().describe('Lookback in minutes (default 60, max 1440)'),
+    min_usd: z.number().min(100).optional().describe('Minimum swap USD value (default 1000)'),
   },
   proGate<{ minutes?: number; min_usd?: number }>(async ({ minutes, min_usd }) => {
     const data = await fetchJSON(`${SAFETY}/api/v1/smart-money/swaps?minutes=${minutes ?? 60}&min_usd=${min_usd ?? 1000}`)
@@ -278,7 +302,8 @@ server.tool(
     address: z.string().describe('Wallet address (0x...)'),
   },
   proGate<{ address: string }>(async ({ address }) => {
-    const data = await fetchJSON(`${SAFETY}/api/v1/wallet/${address}/balances`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/wallet/${addr}/balances`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   })
 )
@@ -290,7 +315,8 @@ server.tool(
     address: z.string().describe('Wallet address (0x...)'),
   },
   proGate<{ address: string }>(async ({ address }) => {
-    const data = await fetchJSON(`${SAFETY}/api/v1/wallet/${address}/swaps`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/wallet/${addr}/swaps`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   })
 )
@@ -302,7 +328,8 @@ server.tool(
     address: z.string().describe('Wallet address to trace (0x...)'),
   },
   proGate<{ address: string }>(async ({ address }) => {
-    const data = await fetchJSON(`${SAFETY}/api/v1/address/${address}/funding-tree`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/address/${addr}/funding-tree`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   })
 )
@@ -314,7 +341,8 @@ server.tool(
     address: z.string().describe('Wallet address (0x...)'),
   },
   proGate<{ address: string }>(async ({ address }) => {
-    const data = await fetchJSON(`${SAFETY}/api/v1/leagues/rank/${address}`)
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/leagues/rank/${addr}`)
     return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] }
   })
 )
@@ -337,7 +365,7 @@ server.tool(
   'get_holder_leagues',
   'Get aggregated holder distribution tiers (poseidon/whale/shark/dolphin/squid/turtle) for a core PulseChain token.',
   {
-    symbol: z.enum(['PLS', 'PLSX', 'HEX', 'INC']).describe('Token symbol'),
+    symbol: z.enum(['PLS', 'PLSX', 'HEX', 'INC', 'PRVX']).describe('Token symbol'),
   },
   async ({ symbol }) => {
     const data = await fetchJSON(`${SAFETY}/api/v1/leagues/${symbol}`)
@@ -349,7 +377,7 @@ server.tool(
   'get_honeypots',
   'List recently detected honeypot tokens on PulseChain.',
   {
-    limit: z.number().optional().describe('Number of results (default 20, max 200)'),
+    limit: z.number().min(1).max(200).optional().describe('Number of results (default 20, max 200)'),
   },
   async ({ limit }) => {
     const data = await fetchJSON(`${API}/api/v1/safety/honeypots?limit=${limit ?? 20}`)
