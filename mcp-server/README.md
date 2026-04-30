@@ -1,5 +1,7 @@
 # @openpulsechain/mcp-server
 
+[![smithery badge](https://smithery.ai/badge/openpulsechain/mcp-server)](https://smithery.ai/servers/openpulsechain/mcp-server)
+
 MCP server that gives AI assistants (Claude, ChatGPT, Cursor, etc.) access to real-time PulseChain on-chain analytics.
 
 **Standard**: 11 tools included, no auth, ready to use in 30 seconds.

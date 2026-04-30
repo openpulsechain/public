@@ -1,5 +1,7 @@
 # OpenPulsechain
 
+[![smithery badge](https://smithery.ai/badge/openpulsechain/mcp-server)](https://smithery.ai/servers/openpulsechain/mcp-server)
+
 Open-source analytics platform for [PulseChain](https://pulsechain.com).
 
 **Live:** [openpulsechain.com](https://www.openpulsechain.com) · **Dune:** [Bridge Analytics](https://dune.com/openpulsechain/pulsechain-bridge-analytics)
