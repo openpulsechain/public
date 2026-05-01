@@ -95,9 +95,9 @@ function proGate<Args>(
           'In your Claude/Cursor/Claude-Code MCP config, add: ' +
           '"env": { "OPENPULSECHAIN_API_KEY": "sk-opk-..." }',
         included_alternatives: [
-          'get_token_price', 'get_token_info', 'get_token_safety',
-          'get_token_liquidity', 'get_top_tokens', 'get_honeypots',
-          'get_market_overview', 'get_bridge_stats', 'get_holder_leagues',
+          'get-token-price', 'get-token-info', 'get-token-safety',
+          'get-token-liquidity', 'get-top-tokens', 'get-honeypots',
+          'get-market-overview', 'get-bridge-stats', 'get-holder-leagues',
         ],
       }
       return {
@@ -135,7 +135,7 @@ function wrapResult(data: any): ToolResult {
 function createServer(): McpServer {
   const s = new McpServer({
     name: 'openpulsechain',
-    version: '1.3.0',
+    version: '2.0.0',
     description: 'PulseChain on-chain analytics for AI agents. Token safety scores, honeypot detection, whale tracking, smart money feed, scam alerts, DEX volume, bridge stats, holder leagues. 11 free + 9 pro tools.',
     websiteUrl: 'https://openpulsechain.com',
     icons: [{ src: 'https://www.openpulsechain.com/logo.png', mimeType: 'image/png' }],
@@ -151,7 +151,7 @@ function registerTools(server: McpServer): void {
 // ═══════════════════════════════════════════════════════════════════════════
 
 server.registerTool(
-  'get_token_price',
+  'get-token-price',
   {
     title: 'Get Token Price',
     description: 'Get current price, 24h change, volume, and market cap for a PulseChain token.',
@@ -175,7 +175,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_token_info',
+  'get-token-info',
   {
     title: 'Get Token Info',
     description: 'Get full details for a PulseChain token: name, symbol, decimals, liquidity, volume, holder count.',
@@ -201,7 +201,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_token_history',
+  'get-token-history',
   {
     title: 'Get Token Price History',
     description: 'Get historical price data (OHLCV) for a PulseChain token. Limited to 30 days without API key; Pro unlocks full history.',
@@ -232,7 +232,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_top_tokens',
+  'get-top-tokens',
   {
     title: 'Get Top Tokens',
     description: 'List top PulseChain tokens sorted by volume, liquidity, or symbol.',
@@ -261,7 +261,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_top_pairs',
+  'get-top-pairs',
   {
     title: 'Get Top DEX Pairs',
     description: 'List top PulseX DEX trading pairs by volume.',
@@ -286,7 +286,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_market_overview',
+  'get-market-overview',
   {
     title: 'Get Market Overview',
     description: 'Get PulseChain network overview: TVL, 24h volume, active tokens, top gainers/losers.',
@@ -312,7 +312,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_token_safety',
+  'get-token-safety',
   {
     title: 'Get Token Safety Score',
     description: 'Analyze a token for scam indicators: honeypot detection, buy/sell tax, ownership, liquidity score (0-100, A-F grade).',
@@ -338,7 +338,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_token_liquidity',
+  'get-token-liquidity',
   {
     title: 'Get Token Liquidity',
     description: 'Get detailed liquidity breakdown for a token: all DEX pairs, volumes, and reserves.',
@@ -371,7 +371,7 @@ server.registerTool(
 // ═══════════════════════════════════════════════════════════════════════════
 
 server.registerTool(
-  'check_address_risk',
+  'check-address-risk',
   {
     title: 'Check Address AML Risk',
     description: '[PRO] Check if a wallet/contract address is flagged for AML risk, known exploits, phishing, or sanctions (OFAC). Requires OPENPULSECHAIN_API_KEY.',
@@ -395,7 +395,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_deployer_reputation',
+  'get-deployer-reputation',
   {
     title: 'Get Deployer Reputation',
     description: '[PRO] Get reputation score for a token deployer: how many tokens deployed, how many died (rug pattern detection). Requires OPENPULSECHAIN_API_KEY.',
@@ -419,7 +419,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_scam_alerts',
+  'get-scam-alerts',
   {
     title: 'Get Scam Alerts',
     description: '[PRO] Get real-time scam radar alerts: honeypots, LP removals (rug pulls), whale dumps. Requires OPENPULSECHAIN_API_KEY.',
@@ -449,7 +449,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_smart_money_feed',
+  'get-smart-money-feed',
   {
     title: 'Get Smart Money Feed',
     description: '[PRO] Get smart money / whale activity feed: large wallet movements and recent swaps on PulseX. Requires OPENPULSECHAIN_API_KEY.',
@@ -475,7 +475,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_recent_swaps',
+  'get-recent-swaps',
   {
     title: 'Get Recent DEX Swaps',
     description: '[PRO] Get recent large swaps on PulseX DEX. Requires OPENPULSECHAIN_API_KEY.',
@@ -502,7 +502,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_wallet_balances',
+  'get-wallet-balances',
   {
     title: 'Get Wallet Balances',
     description: '[PRO] Get current token balances for a PulseChain wallet. Requires OPENPULSECHAIN_API_KEY.',
@@ -529,7 +529,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_wallet_swaps',
+  'get-wallet-swaps',
   {
     title: 'Get Wallet Swap History',
     description: '[PRO] Get swap history for a PulseChain wallet. Requires OPENPULSECHAIN_API_KEY.',
@@ -556,7 +556,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_funding_tree',
+  'get-funding-tree',
   {
     title: 'Get Funding Tree',
     description: '[PRO] Trace funding sources for a wallet: where did the money come from? (2-level depth, bridge/DEX interactions). Requires OPENPULSECHAIN_API_KEY.',
@@ -584,7 +584,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_holder_rank',
+  'get-holder-rank',
   {
     title: 'Get Holder Rank',
     description: '[PRO] Get holder rank and tier for a wallet address across all tracked tokens. Requires OPENPULSECHAIN_API_KEY.',
@@ -614,7 +614,7 @@ server.registerTool(
 // ═══════════════════════════════════════════════════════════════════════════
 
 server.registerTool(
-  'get_bridge_stats',
+  'get-bridge-stats',
   {
     title: 'Get Bridge Stats',
     description: 'Get PulseChain bridge statistics: inflows, outflows, net flow over the last 7 days.',
@@ -637,7 +637,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_holder_leagues',
+  'get-holder-leagues',
   {
     title: 'Get Holder Leagues',
     description: 'Get aggregated holder distribution tiers (poseidon/whale/shark/dolphin/squid/turtle) for a core PulseChain token.',
@@ -662,7 +662,7 @@ server.registerTool(
 )
 
 server.registerTool(
-  'get_honeypots',
+  'get-honeypots',
   {
     title: 'Get Honeypot Tokens',
     description: 'List recently detected honeypot tokens on PulseChain.',

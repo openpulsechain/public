@@ -73,31 +73,31 @@ Once set, the server logs `starting in PRO mode` to stderr and all 20 tools beco
 
 | Tool | Description |
 |------|-------------|
-| `get_token_price` | Current price, 24h change, volume, market cap |
-| `get_token_info` | Full token details: name, symbol, decimals, liquidity, holders |
-| `get_token_history` | Historical price data (OHLCV) — limited to 30 days without API key |
-| `get_top_tokens` | Top tokens sorted by volume or liquidity |
-| `get_top_pairs` | Top PulseX DEX trading pairs |
-| `get_market_overview` | Network overview: TVL, 24h volume, top gainers/losers |
-| `get_token_safety` | Scam analysis: honeypot detection, buy/sell tax, ownership score (A-F) |
-| `get_token_liquidity` | Detailed liquidity breakdown across all DEX pairs |
-| `get_honeypots` | Recently detected honeypot tokens |
-| `get_bridge_stats` | PulseChain bridge inflows/outflows, net flow (7 days) |
-| `get_holder_leagues` | Aggregated holder distribution tiers for core tokens |
+| `get-token-price` | Current price, 24h change, volume, market cap |
+| `get-token-info` | Full token details: name, symbol, decimals, liquidity, holders |
+| `get-token-history` | Historical price data (OHLCV) — limited to 30 days without API key |
+| `get-top-tokens` | Top tokens sorted by volume or liquidity |
+| `get-top-pairs` | Top PulseX DEX trading pairs |
+| `get-market-overview` | Network overview: TVL, 24h volume, top gainers/losers |
+| `get-token-safety` | Scam analysis: honeypot detection, buy/sell tax, ownership score (A-F) |
+| `get-token-liquidity` | Detailed liquidity breakdown across all DEX pairs |
+| `get-honeypots` | Recently detected honeypot tokens |
+| `get-bridge-stats` | PulseChain bridge inflows/outflows, net flow (7 days) |
+| `get-holder-leagues` | Aggregated holder distribution tiers for core tokens |
 
 ### 💎 Pro tier (9) — requires `OPENPULSECHAIN_API_KEY`
 
 | Tool | Description |
 |------|-------------|
-| `check_address_risk` | AML check: OFAC sanctions, known exploits, phishing flags |
-| `get_deployer_reputation` | Deployer track record: tokens deployed, dead ratio, rug patterns |
-| `get_scam_alerts` | Real-time scam radar: honeypots, LP removals, whale dumps |
-| `get_smart_money_feed` | Whale activity feed: large wallet movements |
-| `get_recent_swaps` | Recent large swaps on PulseX DEX |
-| `get_wallet_balances` | Token balances for any wallet |
-| `get_wallet_swaps` | Swap history for any wallet |
-| `get_funding_tree` | Trace funding sources (2-level depth, bridge/DEX interactions) |
-| `get_holder_rank` | Wallet rank and tier across all tracked tokens |
+| `check-address-risk` | AML check: OFAC sanctions, known exploits, phishing flags |
+| `get-deployer-reputation` | Deployer track record: tokens deployed, dead ratio, rug patterns |
+| `get-scam-alerts` | Real-time scam radar: honeypots, LP removals, whale dumps |
+| `get-smart-money-feed` | Whale activity feed: large wallet movements |
+| `get-recent-swaps` | Recent large swaps on PulseX DEX |
+| `get-wallet-balances` | Token balances for any wallet |
+| `get-wallet-swaps` | Swap history for any wallet |
+| `get-funding-tree` | Trace funding sources (2-level depth, bridge/DEX interactions) |
+| `get-holder-rank` | Wallet rank and tier across all tracked tokens |
 
 ## Resources
 
@@ -107,23 +107,23 @@ The server also provides a `pulsechain://tokens/core` resource with addresses fo
 
 > "What's the current price of HEX on PulseChain?"
 
-Included tool `get_token_price` — works without API key.
+Included tool `get-token-price` — works without API key.
 
 > "Is this token safe? 0x1234..."
 
-Included tool `get_token_safety` — honeypot detection, ownership, taxes, grade.
+Included tool `get-token-safety` — honeypot detection, ownership, taxes, grade.
 
 > "Show me whale activity in the last 24 hours"
 
-Pro tool `get_smart_money_feed` — requires API key.
+Pro tool `get-smart-money-feed` — requires API key.
 
 > "Where did the funds in this wallet come from?"
 
-Pro tool `get_funding_tree` — requires API key.
+Pro tool `get-funding-tree` — requires API key.
 
 > "Is this address sanctioned by OFAC?"
 
-Pro tool `check_address_risk` — requires API key.
+Pro tool `check-address-risk` — requires API key.
 
 ## Data Sources
 
