@@ -138,7 +138,7 @@ function wrapResult(data: any): ToolResult {
 function createServer(): McpServer {
   const s = new McpServer({
     name: 'openpulsechain',
-    version: '2.0.0',
+    version: '2.1.0',
     description: 'PulseChain on-chain analytics for AI agents. Token safety scores, honeypot detection, whale tracking, smart money feed, scam alerts, DEX volume, bridge stats, holder leagues. 11 free + 9 pro tools.',
     websiteUrl: 'https://openpulsechain.com',
     icons: [{ src: 'https://www.openpulsechain.com/logo.png', mimeType: 'image/png' }],
@@ -1007,7 +1007,7 @@ async function main() {
 
     // Health check
     app.get('/health', (_req: import('express').Request, res: import('express').Response) => {
-      res.json({ status: 'ok', transport: 'http', tier, version: '2.0.0' })
+      res.json({ status: 'ok', transport: 'http', tier, version: '2.1.0' })
     })
 
     // Reject all paths except /mcp and /health (catch-all at the end)
