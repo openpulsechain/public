@@ -98,6 +98,9 @@ function proGate<Args>(
           'get-token-price', 'get-token-info', 'get-token-safety',
           'get-token-liquidity', 'get-top-tokens', 'get-honeypots',
           'get-market-overview', 'get-bridge-stats', 'get-holder-leagues',
+          'get-opportunity-signal', 'get-pair-analytics', 'get-whale-alerts',
+          'get-gas', 'get-token-holders', 'get-token-sentiment',
+          'get-wallet-transactions', 'get-tx-trace',
         ],
       }
       return {
@@ -714,6 +717,235 @@ server.resource(
     }],
   })
 )
+// ═══════════════════════════════════════════════════════════════════════════
+// ── PHASE A-D NEW TOOLS ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+
+server.registerTool(
+  'get-opportunity-signal',
+  {
+    title: 'Get Opportunity Signal',
+    description: '[PRO] Composite opportunity score (0-100) for a PulseChain token. Combines momentum, volume spike, buy pressure, safety, whale activity, and MC/liquidity fragility. Returns confidence level and graceful degradation for partial data. Requires OPENPULSECHAIN_API_KEY.',
+    inputSchema: {
+      address: z.string().describe('Token contract address (0x...)'),
+    },
+    outputSchema: z.object({
+      opportunity_score: z.number().describe('Composite score 0-100'),
+      grade: z.string().describe('Grade: A, B+, B, C, D, F'),
+      direction_hint: z.string().describe('strong_opportunity, bullish_momentum, neutral_positive, neutral, bearish_pressure, avoid'),
+      confidence: z.string().describe('high, medium, low, insufficient_data'),
+      factors: z.record(z.string(), z.object({ score: z.number(), detail: z.string() }).passthrough()).describe('Individual factor scores'),
+      kill_signals: z.array(z.string()).describe('Override signals that force score to 0'),
+      data_completeness: z.string().describe('full, partial_no_history, safety_only, minimal'),
+    }).passthrough(),
+    annotations: READ_ONLY_ANNOTATIONS,
+  },
+  proGate<{ address: string }>(async ({ address }) => {
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/signal/${addr}`)
+    return wrapResult(data)
+  })
+)
+
+server.registerTool(
+  'get-pair-analytics',
+  {
+    title: 'Get DEX Pair Analytics',
+    description: '[PRO] Detailed analytics for a PulseX trading pair: price, volume, liquidity, buy/sell ratio, price impact estimates, volatility, wash trading detection. Requires OPENPULSECHAIN_API_KEY.',
+    inputSchema: {
+      address: z.string().describe('Pair contract address (0x...)'),
+    },
+    outputSchema: z.object({
+      pair_address: z.string(),
+      price_usd: z.number().nullable(),
+      metrics: z.object({
+        volume_24h_usd: z.number(),
+        liquidity_usd: z.number(),
+        buys_24h: z.number(),
+        sells_24h: z.number(),
+      }).passthrough(),
+      computed: z.object({
+        buy_sell_ratio: z.number(),
+        price_impact_1k_usd: z.number().nullable(),
+        price_impact_10k_usd: z.number().nullable(),
+        volatility_24h: z.number(),
+        liquidity_depth_ratio: z.number(),
+        wash_trading_flag: z.boolean(),
+      }).passthrough(),
+    }).passthrough(),
+    annotations: READ_ONLY_ANNOTATIONS,
+  },
+  proGate<{ address: string }>(async ({ address }) => {
+    const addr = validateAddress(address)
+    const data = await fetchJSON(`${SAFETY}/api/v1/pair/${addr}/analytics`)
+    return wrapResult(data)
+  })
+)
+
+server.registerTool(
+  'get-whale-alerts',
+  {
+    title: 'Get Whale Alerts',
+    description: '[PRO] Recent whale movements: large swaps (>$10K), LP removals, whale dumps. Combines scam radar + PulseX subgraph data. Requires OPENPULSECHAIN_API_KEY.',
+    inputSchema: {
+      hours: z.number().optional().describe('Lookback period in hours (default: 24, max: 168)'),
+      min_usd: z.number().optional().describe('Minimum USD value for swaps (default: 10000)'),
+    },
+    outputSchema: z.object({
+      data: z.array(z.object({
+        type: z.string().describe('large_swap, lp_removal, whale_dump'),
+        severity: z.string().describe('critical, high, medium'),
+        token_address: z.string().nullable(),
+        timestamp: z.string().nullable(),
+        source: z.string(),
+      }).passthrough()),
+      count: z.number(),
+    }).passthrough(),
+    annotations: READ_ONLY_ANNOTATIONS,
+  },
+  proGate<{ hours?: number; min_usd?: number }>(async ({ hours, min_usd }) => {
+    const params = new URLSearchParams()
+    if (hours) params.set('hours', String(hours))
+    if (min_usd) params.set('min_usd', String(min_usd))
+    const qs = params.toString() ? `?${params}` : ''
+    const data = await fetchJSON(`${SAFETY}/api/v1/whale-alerts${qs}`)
+    return wrapResult(data)
+  })
+)
+
+server.registerTool(
+  'get-gas',
+  {
+    title: 'Get Gas Price',
+    description: '[PRO] Current PulseChain gas price in Gwei, block number, and base fee. Requires OPENPULSECHAIN_API_KEY.',
+    inputSchema: {},
+    outputSchema: z.object({
+      gas_price_gwei: z.number().describe('Current gas price in Gwei'),
+      base_fee_gwei: z.number().nullable().describe('Base fee in Gwei'),
+      block_number: z.number().nullable().describe('Latest block number'),
+    }).passthrough(),
+    annotations: READ_ONLY_ANNOTATIONS,
+  },
+  proGate<Record<string, never>>(async (_args) => {
+    const data = await fetchJSON(`${SAFETY}/api/v1/gas`)
+    return wrapResult(data)
+  })
+)
+
+server.registerTool(
+  'get-token-holders',
+  {
+    title: 'Get Token Holders',
+    description: '[PRO] Top holders of a PulseChain token with balances and ownership percentages. Requires OPENPULSECHAIN_API_KEY.',
+    inputSchema: {
+      address: z.string().describe('Token contract address (0x...)'),
+      limit: z.number().optional().describe('Number of holders to return (default: 50, max: 100)'),
+    },
+    outputSchema: z.object({
+      data: z.array(z.object({
+        address: z.string(),
+        balance: z.string(),
+        percentage: z.number(),
+        is_contract: z.boolean(),
+      }).passthrough()),
+      token_address: z.string(),
+      count: z.number(),
+    }).passthrough(),
+    annotations: READ_ONLY_ANNOTATIONS,
+  },
+  proGate<{ address: string; limit?: number }>(async ({ address, limit }) => {
+    const addr = validateAddress(address)
+    const qs = limit ? `?limit=${limit}` : ''
+    const data = await fetchJSON(`${SAFETY}/api/v1/token/${addr}/holders${qs}`)
+    return wrapResult(data)
+  })
+)
+
+server.registerTool(
+  'get-token-sentiment',
+  {
+    title: 'Get Token Sentiment',
+    description: '[PRO] Aggregated social sentiment score (-100 to +100) for a PulseChain token. Based on categorized events (partnerships, exploits, dumps, etc.). Requires OPENPULSECHAIN_API_KEY.',
+    inputSchema: {
+      symbol: z.string().describe('Token symbol (e.g. PLS, HEX, PLSX)'),
+    },
+    outputSchema: z.object({
+      symbol: z.string(),
+      sentiment_score: z.number().describe('-100 (extreme bearish) to +100 (extreme bullish)'),
+      classification: z.string().describe('bullish, bearish, neutral'),
+      positive_events: z.number(),
+      negative_events: z.number(),
+      total_events: z.number(),
+    }).passthrough(),
+    annotations: READ_ONLY_ANNOTATIONS,
+  },
+  proGate<{ symbol: string }>(async ({ symbol }) => {
+    const clean = symbol.replace(/[^a-zA-Z0-9_]/g, '').toUpperCase()
+    const data = await fetchJSON(`${SAFETY}/api/v1/sentiment/${clean}`)
+    return wrapResult(data)
+  })
+)
+
+server.registerTool(
+  'get-wallet-transactions',
+  {
+    title: 'Get Wallet Transactions',
+    description: '[PRO] Recent transactions for a wallet address (PLS transfers + token transfers). Requires OPENPULSECHAIN_API_KEY.',
+    inputSchema: {
+      address: z.string().describe('Wallet address (0x...)'),
+      limit: z.number().optional().describe('Number of transactions (default: 20, max: 50)'),
+    },
+    outputSchema: z.object({
+      data: z.array(z.object({
+        hash: z.string(),
+        from: z.string(),
+        to: z.string(),
+        value: z.string(),
+        timestamp: z.string(),
+      }).passthrough()),
+    }).passthrough(),
+    annotations: READ_ONLY_ANNOTATIONS,
+  },
+  proGate<{ address: string; limit?: number }>(async ({ address, limit }) => {
+    const addr = validateAddress(address)
+    const qs = limit ? `?limit=${limit}` : ''
+    const data = await fetchJSON(`${SAFETY}/api/v1/address/${addr}/transactions${qs}`)
+    return wrapResult(data)
+  })
+)
+
+server.registerTool(
+  'get-tx-trace',
+  {
+    title: 'Get Transaction Trace',
+    description: '[PRO] Internal call trace for a transaction hash. Shows all internal transfers, contract calls, and token movements. Requires OPENPULSECHAIN_API_KEY.',
+    inputSchema: {
+      tx_hash: z.string().describe('Transaction hash (0x...)'),
+    },
+    outputSchema: z.object({
+      transaction: z.object({
+        hash: z.string(),
+        from: z.string(),
+        to: z.string(),
+        value: z.string(),
+      }).passthrough(),
+      internal_transactions: z.array(z.object({
+        from: z.string(),
+        to: z.string(),
+        value: z.string(),
+        type: z.string(),
+      }).passthrough()),
+    }).passthrough(),
+    annotations: READ_ONLY_ANNOTATIONS,
+  },
+  proGate<{ tx_hash: string }>(async ({ tx_hash }) => {
+    const clean = tx_hash.trim().toLowerCase()
+    if (!/^0x[0-9a-f]{64}$/.test(clean)) throw new Error('Invalid transaction hash')
+    const data = await fetchJSON(`${SAFETY}/api/v1/tx/${clean}/trace`)
+    return wrapResult(data)
+  })
+)
+
 } // end registerTools
 
 // ── Start ──
@@ -775,7 +1007,7 @@ async function main() {
 
     // Health check
     app.get('/health', (_req: import('express').Request, res: import('express').Response) => {
-      res.json({ status: 'ok', transport: 'http', tier, version: '1.3.0' })
+      res.json({ status: 'ok', transport: 'http', tier, version: '2.0.0' })
     })
 
     // Reject all paths except /mcp and /health (catch-all at the end)
